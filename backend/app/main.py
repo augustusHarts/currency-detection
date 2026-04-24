@@ -16,7 +16,6 @@ async def lifespan(app: FastAPI):
     app.state.preprocess = PreProcessing()
     app.state.postprocess = PostProcessing()
     app.state.inference = Inference()
-    app.state.inference._get_model()
 
     print("All components loaded")
 
