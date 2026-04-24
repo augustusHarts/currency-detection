@@ -49,6 +49,7 @@ export default function App() {
   const imgRef = useRef<HTMLImageElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
+  const lastObjectUrlRef = useRef<string | null>(null)
   /** Bumped on each new predict so an older in-flight response cannot overwrite a newer image’s results. */
   const predictEpochRef = useRef(0)
 
@@ -149,6 +150,13 @@ export default function App() {
       const res = await predictBlob(blob, conf)
       if (epoch !== predictEpochRef.current) return
       setResult(res)
+      // Show the backend-processed image (white background) instead of the local/original preview.
+      if (lastObjectUrlRef.current) {
+        URL.revokeObjectURL(lastObjectUrlRef.current)
+        lastObjectUrlRef.current = null
+      }
+      setMode('upload')
+      setImgUrl(res.processed_image_url)
     } catch (e) {
       if (epoch !== predictEpochRef.current) return
       setResult(null)
@@ -165,8 +173,10 @@ export default function App() {
     stopCam()
     setMode('upload')
     setResult(null)
-    if (imgUrl) URL.revokeObjectURL(imgUrl)
-    setImgUrl(URL.createObjectURL(f))
+    if (lastObjectUrlRef.current) URL.revokeObjectURL(lastObjectUrlRef.current)
+    const objUrl = URL.createObjectURL(f)
+    lastObjectUrlRef.current = objUrl
+    setImgUrl(objUrl)
     await runPredictOnBlob(f)
     e.target.value = ''
   }
@@ -196,7 +206,8 @@ export default function App() {
     predictEpochRef.current += 1
     stopCam()
     setMode('none')
-    if (imgUrl) URL.revokeObjectURL(imgUrl)
+    if (lastObjectUrlRef.current) URL.revokeObjectURL(lastObjectUrlRef.current)
+    lastObjectUrlRef.current = null
     setImgUrl(null)
     setResult(null)
     setError(null)

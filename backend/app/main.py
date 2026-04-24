@@ -2,10 +2,12 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from app.apis.image_route import router
 from app.ml.inference import Inference
 from app.ml.postprocessing import PostProcessing
 from app.ml.preprocessing import PreProcessing
+from app.utils.config import OUTPUT_DIR
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -37,6 +39,13 @@ app.add_middleware(
 )
 
 app.include_router(router, prefix='/api')
+
+# Serve processed images for the frontend to display
+app.mount(
+    "/data/output",
+    StaticFiles(directory=str(OUTPUT_DIR)),
+    name="output",
+)
 
 @app.get('/health', tags=['Health'])
 def health_check():
