@@ -1,5 +1,3 @@
-import cv2
-
 class PostProcessing:
     def __init__(self):
         pass
@@ -10,6 +8,9 @@ class PostProcessing:
         output_path: str,
         result
     ) -> str:
+
+        # Import here to avoid heavy startup imports (Render port binding).
+        import cv2
 
         img = cv2.imread(image_path)
         if img is None: return ""

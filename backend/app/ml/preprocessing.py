@@ -1,5 +1,4 @@
 from pathlib import Path
-from rembg import remove as rembg_remove
 from PIL import Image as PILImage
 
 class PreProcessing:
@@ -21,6 +20,9 @@ class PreProcessing:
         
         with open(input_path, "rb") as f:
             raw = f.read()
+
+        # Import here to avoid heavy startup imports (Render port binding).
+        from rembg import remove as rembg_remove
 
         # rembg returns a PNG with transparent background (RGBA)
         removed = rembg_remove(raw)

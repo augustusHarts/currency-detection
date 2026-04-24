@@ -1,13 +1,14 @@
 from fastapi import HTTPException
-from ultralytics import YOLO
 from app.utils.config import MODEL_URL
 from fastapi import Request
 
 class Inference:
-    _model : YOLO | None = None
+    _model = None
 
-    def _get_model(self) -> YOLO:
+    def _get_model(self):
         if Inference._model is None:
+            # Import here to avoid heavy startup imports (Render port binding).
+            from ultralytics import YOLO
             Inference._model = YOLO(str(MODEL_URL))
         return Inference._model
 
