@@ -1,0 +1,9 @@
+[project]
+name = "currency-detection-api"
+version = "1.0.0"
+requires-python = ">=3.11"
+
+# Tells Vercel where the FastAPI ASGI app lives when the project root is `backend/`.
+# See https://vercel.com/docs/frameworks/backend/fastapi
+[project.scripts]
+app = "main:app"
