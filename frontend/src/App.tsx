@@ -17,21 +17,21 @@ type PredictRes = {
 const RAW_API_BASE = String(import.meta.env.VITE_API_URL || '').trim()
 const API_BASE = (RAW_API_BASE || '/api').replace(/\/$/, '')
 
-function predictUrl(conf: number): string {
+function predictUrl(): string {
   // Backend is mounted under `/api` (see FastAPI `include_router(..., prefix="/api")`).
   // Accept either `VITE_API_URL=https://host` or `VITE_API_URL=https://host/api`.
   const apiPrefix = API_BASE.endsWith('/api') ? '' : '/api'
-  const path = `${apiPrefix}/v1/predict?conf=${encodeURIComponent(String(conf))}`
+  const path = `${apiPrefix}/v1/predict`
   if (API_BASE.startsWith('http://') || API_BASE.startsWith('https://')) {
     return `${API_BASE}${path}`
   }
   return new URL(`${API_BASE}${path}`, window.location.origin).href
 }
 
-async function predictBlob(blob: Blob, conf = 0.5): Promise<PredictRes> {
+async function predictBlob(blob: Blob): Promise<PredictRes> {
   const fd = new FormData()
   fd.append('file', blob, 'frame.jpg')
-  const u = predictUrl(conf)
+  const u = predictUrl()
   const r = await fetch(u, { method: 'POST', body: fd })
   if (!r.ok) {
     const t = await r.text()
@@ -41,7 +41,6 @@ async function predictBlob(blob: Blob, conf = 0.5): Promise<PredictRes> {
 }
 
 export default function App() {
-  const [conf, setConf] = useState(0.5)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<PredictRes | null>(null)
@@ -151,7 +150,7 @@ export default function App() {
     setBusy(true)
     setError(null)
     try {
-      const res = await predictBlob(blob, conf)
+      const res = await predictBlob(blob)
       if (epoch !== predictEpochRef.current) return
       setResult(res)
       // Show the backend-processed image (white background) instead of the local/original preview.
@@ -254,27 +253,6 @@ export default function App() {
             <button type="button" className="ghost" onClick={reset} disabled={busy}>
               Reset
             </button>
-          </div>
-
-          <div className="conf-row">
-            <label className="conf-control">
-              <span className="conf-label">
-                Min confidence <strong>{(conf * 100).toFixed(0)}%</strong>
-              </span>
-              <input
-                type="range"
-                min={0.2}
-                max={0.85}
-                step={0.05}
-                value={conf}
-                onChange={(e) => setConf(Number(e.target.value))}
-                disabled={busy}
-                aria-valuemin={20}
-                aria-valuemax={85}
-                aria-valuenow={Math.round(conf * 100)}
-                aria-label="Minimum detection confidence"
-              />
-            </label>
           </div>
 
           <div className="preview-wrap" ref={wrapRef}>
