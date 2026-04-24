@@ -98,7 +98,10 @@ async def predict(
             "total_amount": total_amount,
             "breakdown": breakdown,
             "currency": "INR",
-            "processed_image_url": f"/data/output/{os.path.basename(final_output_path)}"
+            # Absolute URL so the frontend can always load it
+            "processed_image_url": str(
+                request.url_for("output", path=os.path.basename(final_output_path))
+            ),
         }
 
     except Exception as e:
