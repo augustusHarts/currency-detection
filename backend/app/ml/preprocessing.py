@@ -1,4 +1,3 @@
-from app.utils.config import INPUT_DIR, OUTPUT_DIR
 from pathlib import Path
 from rembg import remove as rembg_remove
 from PIL import Image as PILImage
@@ -35,6 +34,3 @@ class PreProcessing:
         white_bg.save(output_path)
         
         return output_path
-
-#     74.220.48.0/24
-# 74.220.56.0/24

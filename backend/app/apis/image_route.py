@@ -9,9 +9,6 @@ from collections import Counter
 
 import os
 import uuid
-import cv2
-import shutil
-import numpy as np
 
 router = APIRouter(prefix='/v1',tags=['Items'])
 

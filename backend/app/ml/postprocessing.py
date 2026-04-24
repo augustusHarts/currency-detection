@@ -1,6 +1,3 @@
-from PIL import Image as PILImage
-from app.utils.config import OUTPUT_DIR
-import numpy as np
 import cv2
 
 class PostProcessing:

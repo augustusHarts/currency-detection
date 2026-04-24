@@ -14,10 +14,14 @@ type PredictRes = {
   processed_image_url: string // Add this if you want to show the backend's drawn image
 }
 
-const API_BASE = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')
+const RAW_API_BASE = String(import.meta.env.VITE_API_URL || '').trim()
+const API_BASE = (RAW_API_BASE || '/api').replace(/\/$/, '')
 
 function predictUrl(conf: number): string {
-  const path = `/api/v1/predict?conf=${encodeURIComponent(String(conf))}`
+  // Backend is mounted under `/api` (see FastAPI `include_router(..., prefix="/api")`).
+  // Accept either `VITE_API_URL=https://host` or `VITE_API_URL=https://host/api`.
+  const apiPrefix = API_BASE.endsWith('/api') ? '' : '/api'
+  const path = `${apiPrefix}/v1/predict?conf=${encodeURIComponent(String(conf))}`
   if (API_BASE.startsWith('http://') || API_BASE.startsWith('https://')) {
     return `${API_BASE}${path}`
   }
