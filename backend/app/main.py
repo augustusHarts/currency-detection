@@ -46,6 +46,10 @@ app.mount(
     name="output",
 )
 
+@app.get("/")
+async def root():
+    return {"message": "Currency Detection API is running"}
+
 @app.get('/health', tags=['Health'])
 def health_check():
     return {'status': 'ok'}
