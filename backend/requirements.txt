@@ -1,19 +1,19 @@
-# Web Framework
+# --- Web Server ---
 fastapi==0.115.6
-uvicorn==0.32.1
+uvicorn[standard]==0.46.0
 python-multipart==0.0.17
 
-# Inference Engine (CPU Optimized)
-ultralytics==8.3.49
+# --- Image Processing & Background Removal ---
+rembg==2.0.75
 onnxruntime==1.24.4
+opencv-python-headless==4.10.0.84
+pillow==12.1.1
 numpy==2.4.2
 
-# Image Processing
-rembg==2.0.75
-pillow==12.1.1
-opencv-python-headless==4.10.0.84
+# --- AI Inference ---
+ultralytics==8.3.49
 
-# Core ML (Specify CPU to save 2GB of space)
-torch==2.11.0 --index-url https://download.pytorch.org/whl/cpu
-torchvision==0.26.0 --index-url https://download.pytorch.org/whl/cpu
-
+# --- ML Engine (CPU Optimized for Render) ---
+--find-links https://download.pytorch.org/whl/cpu/torch_stable.html
+torch==2.11.0+cpu
+torchvision==0.26.0+cpu
