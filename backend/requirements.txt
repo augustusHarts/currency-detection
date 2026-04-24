@@ -1,9 +1,9 @@
-# --- Web Server ---
+# --- Web Framework ---
 fastapi==0.115.6
 uvicorn[standard]==0.46.0
 python-multipart==0.0.17
 
-# --- Image Processing & Background Removal ---
+# --- Image Processing ---
 rembg==2.0.75
 onnxruntime==1.24.4
 opencv-python-headless==4.10.0.84
@@ -13,7 +13,7 @@ numpy==2.4.2
 # --- AI Inference ---
 ultralytics==8.3.49
 
-# --- ML Engine (CPU Optimized for Render) ---
+# --- ML Engine (CPU Only) ---
 --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
-torch==2.11.0+cpu
-torchvision==0.26.0+cpu
+torch==2.11.0
+torchvision==0.26.0
